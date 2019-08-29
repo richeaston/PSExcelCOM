@@ -8,9 +8,13 @@ Copy PSM1 into C:\Windows\system32\WindowsPowershell\v1.0\Modules\PSExcelCOM\PSE
 I will provide examples soon, but please have a look at feedback
 
 ToDo's
-Valignment function
-Halignment function
-Insert Image function
+
+#Valignment function
+
+#Halignment function
+
+#Insert Image function
+
 
 Known issues
 Tweaks for usage examples in PSM1 and there are some errors.
