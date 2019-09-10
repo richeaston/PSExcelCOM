@@ -9,14 +9,7 @@ function PSSetColumnWidth($sheet, $column, $width) {
         $sheetWS.Columns("$column").ColumnWidth = $width
 }
 
-# Set valignment
-# usage: PSSetVAlign -sheet sheet1 -column "A" -width '-4160'
-function PSSetVAlign($sheet, $range, $Alignment) {
-    $sheetWS = $WB.Worksheets.item("$sheet")
-    $selection = $sheetWS.Range("$range")
-    [void]$selection.select()
-    $selection.Style.VerticalAlignment = $Alignment
-}
+
 
 # Set row height 
 # usage: PSSetRowHeight -sheet sheet1 -rows "1" -height 10
@@ -25,7 +18,7 @@ function PSSetRowHeight($sheet, $rows, $height) {
     $selection = $sheetWS.Rows("$rows")
     [void]$selection.select()
     $selection.RowHeight = "$height"
-    $selection = $null
+    $selection | Out-Null
 }
 
 Function PSSaveWorkbook($file) {
@@ -35,33 +28,59 @@ Function PSSaveWorkbook($file) {
 
 # Set borderaround area 
 # usage: PSSetBorderAround -sheet sheet1 -range "A1:b3" -criteria 1,1,1 (linestyle,weight,colorindex)
-function PSSetBorderAround($sheet, $range, $linestyle, $weight, $Colorindex) {
+function PSSetBorderAround($sheet, $range, $linestyle, $weight, $colorindexindex) {
     $sheetWS = $WB.Worksheets.item("$sheet")
     $selection = $sheetWS.Range($range)
     [void]$selection.select()
-    $selection.BorderAround($linestyle,$weight,$Colorindex)
-    $selection = $null
+    $selection.BorderAround($linestyle,$weight,$colorindexindex)
+    $selection | Out-Null
+}
+
+<#
+$Continuous=1
+$DiagonalDown=5
+$DiagonalUp=6
+$EdgeBottom=9
+$EdgeLeft=7
+$EdgeRight=10
+$EdgeTop=8
+$InsideHorizontal=12
+$InsideVertical=11
+#>
+
+Function PSSetBorderInside($sheet, $range, $weight, $colorindexindex) {
+    $sheetWS = $WB.Worksheets.item($sheet)
+    $selection = $sheetWS.Range($range)
+    [void]$selection.select()
+    $selection.Borders.item(11).Linestyle = 1
+    $selection.Borders.item(12).Linestyle = 1
+    $selection.Borders.item(11).Weight = $weight
+    $selection.Borders.item(12).Weight = $weight
+    $selection.Borders.item(11).Colorindex = $colorindexindex
+    $selection.Borders.item(12).Colorindex = $colorindexindex
+    $selection | Out-Null
 }
 
 # Set background color on area 
 # usage: PSSetbackgroundcolor -sheet sheet1 -range "a1:b3" -color 15
-function PSSetbackgroundcolor($sheet, $range, $color) {
+function PSSetbackgroundcolor($sheet, $range, $colorindex) {
     $sheetWS = $WB.Worksheets.item("$sheet")
     $selection = $sheetWS.Range("$range")
     [void]$selection.select()
-    $selection.Interior.ColorIndex = "$color"
-    $selection = $null
+    $selection.Interior.ColorIndex = "$colorindex"
+    $selection | Out-Null
 }
 
 # Set font on area 
 # usage: PSSetfont -sheet sheet1 -range "a1:b3" -fname 'arial' -fsize 12 -color 0
-function PSSetfont($sheet, $range, $fname, $fsize, $color) {
+function PSSetfont($sheet, $range, $fname, $fsize, $colorindex) {
     $sheetWS = $WB.Worksheets.item("$sheet")
     $selection = $sheetWS.Range("$range")
     [void]$selection.select()
     $selection.Font.Name = "$fname"
     $selection.Font.Size = "$fsize"
-    $selection.Font.ColorIndex = "$color"
+    $selection.Font.ColorIndex = $colorindex
+    $selection | Out-Null
 }
 
 # Set font Bold
@@ -71,18 +90,32 @@ function PSSetFontBold($sheet, $range) {
     $selection = $sheetWS.Range($range)
     [void]$selection.select()
     $selection.font.bold = $True
-    $selection = $null
+    $selection | Out-Null
     
+}
+
+function PSSetFontUnderlined($sheet, $range) {
+    $sheetWS = $WB.Worksheets.item($sheet)
+    $selection = $sheetWS.Range($range)
+    [void]$selection.select()
+    $selection.font.underline = $True
+    $selection | Out-Null
 }
 
 # Set cell content
 # usage: PSSetcellcontent -sheet sheet1 -column 1 -row 2 -content "hello world"
 function PSSetCellContent($sheet, $column, $row, $content) {
     $sheetWS = $WB.Worksheets.item($sheet)
-    #$selection = $sheetWS.Range($range)
-    #[void]$selection.select()
-    $sheetWS.cells.item($column,$row) = $content
+    $sheetWS.cells.item($row,$column) = $content
     
+}
+
+function PSSetCellContentWrap($sheet, $range) {
+    $sheetWS = $WB.Worksheets.item($sheet)
+    $selection = $sheetWS.Range($range)
+    [void]$selection.select()
+    $selection.WrapText = $True
+    $selection | Out-Null
 }
 
 # Set  Active sheet
@@ -104,5 +137,25 @@ function PSMergecells($sheet, $range) {
     $selection = $sheetWS.Range($range)
     [void]$selection.select()
     $selection.MergeCells = $True
+    $selection | Out-Null
 }
 
+Function PSAddPicture($sheet, $path, $top, $left, $width, $height) {
+    $sheetWS = $WB.Worksheets.item($sheet)
+    $sheetWS.Shapes.AddPicture($path, $msoFalse, $msoTrue, $top, $left, $width, $height)
+    #$invoiceWS.Shapes.AddPicture("$dir\NSSL-Logo.png",  $msoFalse, $msoTrue, 20, 20, 135, 75)
+}
+
+Function PSSetHAlignment($sheet, $range, $alignment) {
+    $sheetWS = $WB.Worksheets.item($sheet)
+    $sheetWS.Range($range).HorizontalAlignment = $alignment
+    
+}
+
+# Set valignment
+# usage: PSSetVAlignment -sheet sheet1 -range "a1:a3" -Alignment 1  #4 = double spaced, 3 = bottom, 2 = middle, 1 = top
+   
+function PSSetVAlignment($sheet, $range, $Alignment) {
+    $sheetWS = $WB.Worksheets.item($sheet)
+    $selection = $sheetWS.Range($range).VerticalAlignment = $Alignment
+}
