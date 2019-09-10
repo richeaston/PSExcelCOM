@@ -9,11 +9,10 @@ I will provide examples soon, but please have a look at feedback
 
 ToDo's
 
-#Valignment function
-
-#Halignment function
-
 #Insert Image function
+
+#cell to, bottom, left, right borders
+
 
 
 Known issues
