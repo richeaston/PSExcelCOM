@@ -143,7 +143,7 @@ function PSMergecells($sheet, $range) {
 Function PSAddPicture($sheet, $path, $top, $left, $width, $height) {
     $sheetWS = $WB.Worksheets.item($sheet)
     $sheetWS.Shapes.AddPicture($path, $msoFalse, $msoTrue, $top, $left, $width, $height)
-    #$invoiceWS.Shapes.AddPicture("$dir\NSSL-Logo.png",  $msoFalse, $msoTrue, 20, 20, 135, 75)
+    #$invoiceWS.Shapes.AddPicture("$dir\Logo.png",  $msoFalse, $msoTrue, 20, 20, 135, 75)
 }
 
 Function PSSetHAlignment($sheet, $range, $alignment) {
